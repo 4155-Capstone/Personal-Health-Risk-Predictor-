@@ -21,13 +21,13 @@ def load_data(filename):
     """Load the dataset and show basic information."""
     try:
         df = pd.read_csv(filename)
-        print("✅ Data loaded successfully!\n")
+        print("Data loaded successfully!\n")
         print("Shape:", df.shape)
         print("\nMissing values:\n", df.isnull().sum())
         print("\nDuplicates:", df.duplicated().sum())
         return df
     except FileNotFoundError:
-        print("❌ File not found! Please check the path.")
+        print("File not found! Please check the path.")
         exit()
 
 # -----------------------
@@ -38,7 +38,7 @@ def clean_data(df):
     df = df.drop_duplicates()
     for col in ['gender', 'smoking_history']:
         df[col] = df[col].astype('category')
-    print("✅ Data cleaned. Shape:", df.shape)
+    print("Data cleaned. Shape:", df.shape)
     return df
 
 # -----------------------
@@ -101,7 +101,7 @@ def train_model(X_train, y_train):
         random_state=42, class_weight='balanced'
     )
     model.fit(X_train, y_train)
-    print("✅ Model trained successfully!")
+    print("Model trained successfully!")
     return model
 
 # -----------------------
@@ -119,7 +119,7 @@ def evaluate_model(model, X_test, y_test):
     f1 = f1_score(y_test, y_pred, zero_division=0)
     roc_auc = roc_auc_score(y_test, y_probs)
 
-    print("\n📊 Model Evaluation:")
+    print("\nModel Evaluation:")
     print(f"Accuracy : {acc:.4f}")
     print(f"Precision: {prec:.4f}")
     print(f"Recall   : {rec:.4f}")
@@ -146,7 +146,7 @@ def evaluate_model(model, X_test, y_test):
 def save_model(model, scaler, filename="diabetes_rf_model.pkl"):
     """Save trained model and scaler using joblib."""
     joblib.dump({"model": model, "scaler": scaler}, filename)
-    print(f"💾 Model and scaler saved as '{filename}'")
+    print(f"Model and scaler saved as '{filename}'")
 
 # -----------------------
 # Predict New Input
@@ -156,7 +156,7 @@ def predict_input(model, scaler, input_data):
     np_array = np.asarray(input_data).reshape(1, -1)
     scaled = scaler.transform(np_array)
     prediction = model.predict(scaled)[0]
-    return "🩸 Diabetic" if prediction == 1 else "💚 Non-Diabetic"
+    return "Diabetic" if prediction == 1 else "Non-Diabetic"
 
 # -----------------------
 # Main Program

@@ -5,8 +5,8 @@ import pandas as pd
 
 # Load model and metadata
 try:
-    pipeline = joblib.load("../diabetes_rf_pipeline.joblib")
-    with open("../diabetes_meta.json", "r") as f:
+    pipeline = joblib.load("diabetes_rf_pipeline.joblib")
+    with open("diabetes_meta.json", "r") as f:
         meta = json.load(f)
     model = pipeline["model"]
     scaler = pipeline["scaler"]
@@ -45,17 +45,21 @@ if st.button("Predict"):
 
         # Create dataframe for scaler (fixes warning)
         input_data = pd.DataFrame([{
+            "age": int(age),
+            "bmi": float(bmi),
             "HbA1c_level": float(hba1c),
             "blood_glucose_level": float(glucose),
-            "bmi": float(bmi),
-            "age": int(age),
-            "smoking_history": int(smoking_map[smoking])
+            "gender": int(gender_map[gender]),
+            "smoking_history": int(smoking_map[smoking]),
+            "hypertension": int(hyper_map[hypertension]),
+            "heart_disease": int(heart_map[heart_disease])
         }])[cols]
 
         scaled = scaler.transform(input_data)
         prob = model.predict_proba(scaled)[0][1]
 
-        threshold = meta.get("threshold", 0.5)
+        #threshold = meta.get("threshold", 0.5)
+        threshold = 0.5
         risk_level = "High" if prob >= threshold else "Low"
         color = "🟥" if risk_level == "High" else "🟩"
 

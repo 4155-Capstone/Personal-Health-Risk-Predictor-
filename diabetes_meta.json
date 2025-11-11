@@ -1,16 +1,1 @@
-{
-    "threshold": 0.85,
-    "features": [
-        "HbA1c_level",
-        "blood_glucose_level",
-        "bmi",
-        "age",
-        "smoking_history"
-    ],
-    "model_type": "RandomForestClassifier",
-    "accuracy": 0.9685203161836083,
-    "precision": 0.915650406504065,
-    "recall": 0.7083333333333334,
-    "f1_score": 0.7987588652482269,
-    "roc_auc": 0.9616529162780687
-}
+{"features": ["age", "bmi", "HbA1c_level", "blood_glucose_level", "gender", "smoking_history", "hypertension", "heart_disease"], "threshold": 0.85}

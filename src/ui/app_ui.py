@@ -1,6 +1,6 @@
 import streamlit as st
-from heart_disease_app import heart_ui
-from diabetes_app import diabetes_ui
+from ui.heart_disease_app import heart_ui
+from ui.diabetes_app import diabetes_ui
 
 st.set_page_config(page_title="Multi-disease Risk Checker", layout="centered")
 st.title("🩺 Multi-disease Risk Checker")

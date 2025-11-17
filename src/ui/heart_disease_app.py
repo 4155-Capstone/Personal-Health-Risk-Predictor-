@@ -22,7 +22,7 @@ def heart_ui():
     # -----------------------
     # App setup
     # -----------------------
-    st.set_page_config(page_title="Heart Disease Risk Predictor", layout="centered")
+    #st.set_page_config(page_title="Heart Disease Risk Predictor", layout="centered")
     st.title("❤️ Heart Disease Risk Predictor")
     st.caption("For educational purposes only — not medical advice.")
 

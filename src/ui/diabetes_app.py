@@ -18,7 +18,7 @@ def diabetes_ui():
         st.stop()
 
     # App setup
-    st.set_page_config(page_title="Diabetes Risk Predictor", page_icon="💉", layout="centered")
+    #st.set_page_config(page_title="Diabetes Risk Predictor", page_icon="💉", layout="centered")
     st.title("💉 Diabetes Risk Predictor")
     st.caption("For educational use only — not medical advice.")
 

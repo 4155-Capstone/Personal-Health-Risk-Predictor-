@@ -10,7 +10,7 @@ from sklearn.metrics import accuracy_score, roc_auc_score, classification_report
 # -----------------------
 # Load Data
 # -----------------------
-df = pd.read_csv("heart.csv")  # Replace with your CSV path
+df = pd.read_csv("heart.csv")  
 
 # -----------------------
 # Identify categorical and numeric columns

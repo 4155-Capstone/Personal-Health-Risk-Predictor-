@@ -7,8 +7,8 @@ import pandas as pd
 def diabetes_ui():
     # Load model and metadata
     try:
-        pipeline = joblib.load("diabetes_rf_pipeline.joblib")
-        with open("diabetes_meta.json", "r") as f:
+        pipeline = joblib.load("models/diabetes/diabetes_rf_pipeline.joblib")
+        with open("models/diabetes/diabetes_meta.json", "r") as f:
             meta = json.load(f)
         model = pipeline["model"]
         scaler = pipeline["scaler"]

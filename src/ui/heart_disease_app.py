@@ -8,8 +8,8 @@ def heart_ui():
     # Load model and metadata
     # -----------------------
     try:
-        pipeline = joblib.load("heart_pipeline.joblib")  # Use path to your saved pipeline
-        with open("heart_meta.json", "r") as f:
+        pipeline = joblib.load("models/heart/heart_pipeline.joblib")  # Use path to your saved pipeline
+        with open("models/heart/heart_meta.json", "r") as f:
             meta = json.load(f)
         model = pipeline["model"]
         scaler = pipeline["scaler"]

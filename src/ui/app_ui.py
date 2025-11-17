@@ -1,9 +1,9 @@
 import streamlit as st
-from ui.heart_disease_app import heart_ui
-from ui.diabetes_app import diabetes_ui
+from heart_disease_app import heart_ui
+from diabetes_app import diabetes_ui
 
-st.set_page_config(page_title="Multi-disease Risk Checker", layout="centered")
-st.title("🩺 Multi-disease Risk Checker")
+st.set_page_config(page_title="Multi-disease Risk Predictor", layout="centered")
+st.title("🩺 Multi-disease Risk Predictor")
 st.markdown("**Educational tool only — not a medical diagnosis.**")
 
 # Select model

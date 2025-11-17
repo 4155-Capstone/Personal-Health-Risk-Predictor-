@@ -178,8 +178,6 @@ def test_save_artifacts_creates_files(tmp_path, dummy_diabetes_df, monkeypatch):
         os.chdir(old_cwd)
 
 
-# ---------- Optional: tiny end-to-end smoke test ----------
-
 def test_full_pipeline_end_to_end(dummy_diabetes_df):
     """
     End-to-end smoke test: preprocess -> split -> scale -> train -> predict_proba.

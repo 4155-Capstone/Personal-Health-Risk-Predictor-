@@ -88,3 +88,6 @@ def diabetes_ui():
 
         except Exception as e:
             st.error(f"⚠️ Prediction failed: {e}")
+
+if __name__ == "__main__":
+    diabetes_ui()

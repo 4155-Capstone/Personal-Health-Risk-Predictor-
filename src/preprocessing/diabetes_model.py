@@ -140,7 +140,7 @@ def save_artifacts(model, scaler, selected_features, threshold):
 # Main
 # -----------------------
 if __name__ == "__main__":
-    df = load_data("diabetes_prediction_dataset.csv")
+    df = load_data("../../data/diabetes_prediction_dataset.csv")
     df = clean_data(df)
 
     X, y, feats, le_gender, le_smoke = preprocess_data(df)

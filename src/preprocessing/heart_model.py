@@ -131,7 +131,7 @@ def save_artifacts(model, scaler, le_dict, features, threshold=0.5):
 # -----------------------
 # Main Pipeline
 # -----------------------
-def run_pipeline(csv_path="heart.csv", threshold=0.5):
+def run_pipeline(csv_path="../../data/heart.csv", threshold=0.5):
     df = load_data(csv_path)
     df = clean_data(df)
     X, y, numeric_cols, le_dict = preprocess_data(df)

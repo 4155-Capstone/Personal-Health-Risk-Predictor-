@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import joblib
 import json
+from pathlib import Path
 
 def heart_ui():
     # -----------------------
@@ -89,3 +90,8 @@ def heart_ui():
 
         except Exception as e:
             st.error(f"⚠️ Prediction failed: {e}")
+
+
+if __name__ == "__main__":
+    # When run directly with `streamlit run heart_disease_app.py`, call the UI
+    heart_ui()

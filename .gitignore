@@ -211,5 +211,3 @@ __marimo__/
 .streamlit/
 
 #Models
-models/heart/*.joblib
-models/diabetes/*.joblib

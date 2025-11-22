@@ -211,4 +211,4 @@ __marimo__/
 .streamlit/
 
 #Models
-modules/
+models/

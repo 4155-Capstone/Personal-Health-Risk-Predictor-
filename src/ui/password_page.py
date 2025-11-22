@@ -18,7 +18,8 @@ def password_page():
     # Show password input if not authenticated
     if not st.session_state.authenticated:
         pwd = st.text_input("Enter password:", type="password")
-        if pwd == st.secrets.get("APP_PASSWORD"):
+        #if pwd == st.secrets.get("APP_PASSWORD"):
+        if pwd == st.secrets["passwords"]["admin"]:
             st.session_state.authenticated = True
             st.session_state.last_interaction = time.time()
             st.rerun()  # Go to main app

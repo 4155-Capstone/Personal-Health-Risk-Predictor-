@@ -1,7 +1,7 @@
 import streamlit as st
 from password_page import password_page
-from heart_disease_app import heart_ui
-from diabetes_app import diabetes_ui
+from new_heart import heart_ui1
+from new_diabetes import diabetes_ui1
 import time
 
 st.set_page_config(page_title="Multi-disease Risk Predictor", layout="centered")
@@ -25,6 +25,6 @@ if st.session_state.get("authenticated", False):
     )
 
     if model_choice == "Heart Disease":
-        heart_ui()
+        heart_ui1()
     else:
-        diabetes_ui()
+        diabetes_ui1()

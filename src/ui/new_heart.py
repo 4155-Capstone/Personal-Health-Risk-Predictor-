@@ -1,44 +1,31 @@
 import streamlit as st
 import pandas as pd
-import joblib
 import json
-from pathlib import Path
+from decrypt_helper import decrypt_model  # or copy function here
 
-def download_model(url, local_path):
-    if not os.path.exists(local_path):
-        os.makedirs(os.path.dirname(local_path), exist_ok=True)
-        r = requests.get(url)
-        r.raise_for_status()  # fail fast if download fails
-        with open(local_path, "wb") as f:
-            f.write(r.content)
-def heart_ui():
-    # -----------------------
-    # Load model and metadata
-    # -----------------------
-    try:
-        pipeline = joblib.load("models/heart/heart_pipeline.joblib")  # Use path to your saved pipeline
-        with open("models/heart/heart_meta.json", "r") as f:
-            meta = json.load(f)
-        model = pipeline["model"]
-        scaler = pipeline["scaler"]
-        le_dict = pipeline["label_encoders"]
-        features = pipeline["features"]
-    except Exception as e:
-        st.error(f"Could not load model artifacts. {e}")
-        st.stop()
+def heart_ui1():
+    """UI for Heart Disease Risk Predictor with model decryption"""
 
     # -----------------------
-    # App setup
+    # Load model
     # -----------------------
-    #st.set_page_config(page_title="Heart Disease Risk Predictor", layout="centered")
-    st.title("❤️ Heart Disease Risk Predictor")
-    st.caption("For educational purposes only — not medical advice.")
+    enc_file = "models/heart/heart_pipeline.enc"
+    dec_file = "models/heart/heart_pipeline.joblib"
+    pipeline = decrypt_model(enc_file, dec_file, "heart_model")
 
-    st.subheader("Enter Health Information")
+    with open("models/heart/heart_meta.json", "r") as f:
+        meta = json.load(f)
+
+    model = pipeline["model"]
+    scaler = pipeline["scaler"]
+    le_dict = pipeline["label_encoders"]
+    features = pipeline["features"]
 
     # -----------------------
-    # User inputs
+    # UI
     # -----------------------
+    st.subheader("❤️ Heart Disease Risk Predictor")
+
     age = st.number_input("Age", min_value=1, max_value=120, value=60)
     sex = st.selectbox("Sex", list(le_dict['Sex'].classes_))
     chest_pain = st.selectbox("Chest Pain Type", list(le_dict['ChestPainType'].classes_))
@@ -51,13 +38,8 @@ def heart_ui():
     oldpeak = st.number_input("Oldpeak", min_value=0.0, max_value=10.0, value=1.0, step=0.1)
     st_slope = st.selectbox("ST Slope", list(le_dict['ST_Slope'].classes_))
 
-
-    # -----------------------
-    # Prediction button
-    # -----------------------
-    if st.button("Predict Risk"):
+    if st.button("Predict Heart Risk"):
         try:
-            # Prepare input DataFrame
             input_dict = {
                 "Age": age,
                 "Sex": le_dict['Sex'].transform([sex])[0],
@@ -73,23 +55,19 @@ def heart_ui():
             }
 
             input_df = pd.DataFrame([input_dict])
-
-            # Scale numeric features
             numeric_cols = ['Age', 'RestingBP', 'Cholesterol', 'FastingBS', 'MaxHR', 'Oldpeak']
             input_df[numeric_cols] = scaler.transform(input_df[numeric_cols])
 
-            # Predict probability
             prob = model.predict_proba(input_df)[0, 1]
             threshold = meta.get("threshold", 0.5)
             risk_level = "High" if prob >= threshold else "Low"
             color = "🟥" if risk_level == "High" else "🟩"
 
-            # Display results
             st.markdown(f"### {color} Risk Level: **{risk_level} ({prob*100:.2f}%)**")
             with st.expander("What this means"):
                 st.write(
-                    "- This tool estimates the risk of heart disease from your inputs.\n"
-                    "- It does **not** provide a diagnosis.\n"
+                    "- Estimates heart disease risk.\n"
+                    "- Not a medical diagnosis.\n"
                     "- Discuss results with a healthcare professional."
                 )
             with st.expander("Input Summary"):
@@ -97,8 +75,3 @@ def heart_ui():
 
         except Exception as e:
             st.error(f"⚠️ Prediction failed: {e}")
-
-
-if __name__ == "__main__":
-    # When run directly with `streamlit run heart_disease_app.py`, call the UI
-    heart_ui()

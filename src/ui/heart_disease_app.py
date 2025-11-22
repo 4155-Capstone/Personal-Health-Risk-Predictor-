@@ -4,13 +4,6 @@ import joblib
 import json
 from pathlib import Path
 
-def download_model(url, local_path):
-    if not os.path.exists(local_path):
-        os.makedirs(os.path.dirname(local_path), exist_ok=True)
-        r = requests.get(url)
-        r.raise_for_status()  # fail fast if download fails
-        with open(local_path, "wb") as f:
-            f.write(r.content)
 def heart_ui():
     # -----------------------
     # Load model and metadata

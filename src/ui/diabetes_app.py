@@ -18,7 +18,9 @@ def download_model(url, local_path):
 def diabetes_ui():
     # Load model and metadata
     try:
-        pipeline = joblib.load("models/diabetes/diabetes_rf_pipeline.joblib")
+        #pipeline = joblib.load("models/diabetes/diabetes_rf_pipeline.joblib")
+        #with open("models/diabetes/diabetes_meta.json", "r") as f:
+        pipeline = joblib.load("models/diabetes/diabetes_logreg_pipeline.joblib")
         with open("models/diabetes/diabetes_meta.json", "r") as f:
             meta = json.load(f)
         model = pipeline["model"]
@@ -68,14 +70,24 @@ def diabetes_ui():
                 "heart_disease": int(heart_map[heart_disease])
             }])[cols]
 
+            input_data["HbA1c_level"] = input_data["HbA1c_level"] * 1.025
             scaled = scaler.transform(input_data)
             prob = model.predict_proba(scaled)[0][1]
 
-            #threshold = meta.get("threshold", 0.5)
-            threshold = 0.5
-            risk_level = "High" if prob >= threshold else "Low"
-            color = "🟥" if risk_level == "High" else "🟩"
+            if float(hba1c) > 6.0:
+                prob = max(prob, 0.20)
 
+            threshold = meta.get("threshold", 0.5)
+            #threshold = 0.1
+            if prob < 0.30:
+                risk_level = "Low"
+                color = "🟩"
+            elif prob < 0.55:
+                risk_level = "Moderate"
+                color = "🟨"
+            else:
+                risk_level = "High"
+                color = "🟥"
             st.markdown(f"### {color} Risk Level: **{risk_level} ({prob*100:.2f}%)**")
 
             with st.expander("What this means"):

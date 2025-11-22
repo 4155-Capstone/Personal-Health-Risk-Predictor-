@@ -12,7 +12,7 @@ from sklearn.metrics import (
     accuracy_score, precision_score, recall_score, f1_score,
     roc_auc_score, classification_report
 )
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 
 # -----------------------
 # Load Data
@@ -34,7 +34,7 @@ def clean_data(df):
     return df
 
 # -----------------------
-# Preprocess & Use ALL Features
+# Preprocess Data
 # -----------------------
 def preprocess_data(df):
     df = df.copy()
@@ -58,12 +58,14 @@ def preprocess_data(df):
 
     X = df[selected_features]
     y = df["diabetes"]
+    df["HbA1c_level"] = df["HbA1c_level"] * 3.0  # Example transformation
+    
 
     print("Using ALL features:", selected_features)
     return X, y, selected_features, le_gender, le_smoke
 
 # -----------------------
-# Split Data
+# Split
 # -----------------------
 def split_data(X, y):
     X_train, X_temp, y_train, y_temp = train_test_split(
@@ -77,7 +79,7 @@ def split_data(X, y):
     return X_train, X_val, X_test, y_train, y_val, y_test
 
 # -----------------------
-# Scale Data
+# Scale
 # -----------------------
 def scale_data(X_train, X_val, X_test):
     scaler = StandardScaler()
@@ -89,23 +91,20 @@ def scale_data(X_train, X_val, X_test):
     )
 
 # -----------------------
-# Train Model
+# Train Logistic Regression
 # -----------------------
 def train_model(X_train, y_train):
-    model = RandomForestClassifier(
-        n_estimators=300,
-        max_depth=15,
-        min_samples_split=10,
-        min_samples_leaf=4,
+    model = LogisticRegression(
+        max_iter=500,
         class_weight="balanced",
-        random_state=42
+        solver="liblinear"
     )
     model.fit(X_train, y_train)
-    print("Model trained")
+    print("Logistic Regression trained.")
     return model
 
 # -----------------------
-# Evaluate Model
+# Evaluate
 # -----------------------
 def evaluate_model(model, X_test, y_test, threshold):
     y_probs = model.predict_proba(X_test)[:, 1]
@@ -128,13 +127,13 @@ def save_artifacts(model, scaler, selected_features, threshold):
         "scaler": scaler,
         "features": selected_features
     }
-    joblib.dump(pipeline, "diabetes_rf_pipeline.joblib")
+    joblib.dump(pipeline, "diabetes_logreg_pipeline.joblib")
 
     meta = {"features": selected_features, "threshold": threshold}
     with open("diabetes_meta.json", "w") as f:
         json.dump(meta, f)
 
-    print("Saved diabetes_rf_pipeline.joblib & diabetes_meta.json")
+    print("Saved diabetes_logreg_pipeline.joblib & diabetes_meta.json")
 
 # -----------------------
 # Main
@@ -149,7 +148,7 @@ if __name__ == "__main__":
 
     model = train_model(X_train_s, y_train)
 
-    threshold = 0.85
+    threshold = 0.40
     evaluate_model(model, X_test_s, y_test, threshold)
 
     save_artifacts(model, scaler, feats, threshold)

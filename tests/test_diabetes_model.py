@@ -11,7 +11,7 @@ PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, ".."))
 sys.path.insert(0, PROJECT_ROOT)
 
 from src.preprocessing import diabetes_model as dm
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 
 
@@ -114,14 +114,13 @@ def test_scale_data_shapes(dummy_diabetes_df):
     assert hasattr(scaler, "mean_")
 
 
-def test_train_model_returns_random_forest(dummy_diabetes_df):
+def test_train_model_returns_logistic_regression(dummy_diabetes_df):
     X, y, *_ = dm.preprocess_data(dummy_diabetes_df)
     X_train, X_val, X_test, y_train, y_val, y_test = dm.split_data(X, y)
     X_train_s, X_val_s, X_test_s, scaler = dm.scale_data(X_train, X_val, X_test)
 
     model = dm.train_model(X_train_s, y_train)
-
-    assert isinstance(model, RandomForestClassifier)
+    assert isinstance(model, LogisticRegression)
     # Should be able to predict on training data without error
     preds = model.predict(X_train_s)
     assert len(preds) == len(y_train)
@@ -169,11 +168,21 @@ def test_save_artifacts_creates_files(tmp_path, dummy_diabetes_df, monkeypatch):
     try:
         dm.save_artifacts(model, scaler, features, threshold)
 
-        pipeline_path = tmp_path / "diabetes_rf_pipeline.joblib"
+        pipeline_path = tmp_path / "diabetes_logreg_pipeline.joblib"
         meta_path = tmp_path / "diabetes_meta.json"
 
         assert pipeline_path.exists(), "Pipeline file was not created"
         assert meta_path.exists(), "Meta JSON file was not created"
+
+        # Verify contents of the saved pipeline
+        import joblib, json
+
+        pipeline = joblib.load(pipeline_path)
+        assert isinstance(pipeline, dict)
+        assert "model" in pipeline and "scaler" in pipeline and "features" in pipeline
+
+        meta = json.loads(meta_path.read_text())
+        assert "features" in meta and "threshold" in meta
     finally:
         os.chdir(old_cwd)
 

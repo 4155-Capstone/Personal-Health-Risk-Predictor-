@@ -74,9 +74,16 @@ def heart_ui():
             # Predict probability
             prob = model.predict_proba(input_df)[0, 1]
             threshold = meta.get("threshold", 0.5)
-            risk_level = "High" if prob >= threshold else "Low"
-            color = "🟥" if risk_level == "High" else "🟩"
-
+            # Determine risk level
+            if prob < 0.33:
+                risk_level = "Low"
+                color = "🟩"
+            elif prob < 0.66:
+                risk_level = "Moderate"
+                color = "🟨"
+            else:
+                risk_level = "High"
+                color = "🟥"
             # Display results
             st.markdown(f"### {color} Risk Level: **{risk_level} ({prob*100:.2f}%)**")
             with st.expander("What this means"):

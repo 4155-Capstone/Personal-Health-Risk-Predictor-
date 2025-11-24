@@ -3,13 +3,17 @@ import pandas as pd
 import joblib
 import json
 from pathlib import Path
+from load_encrypted_model import load_encrypted_model
 
 def heart_ui():
     # -----------------------
     # Load model and metadata
     # -----------------------
     try:
-        pipeline = joblib.load("models/heart/heart_pipeline.joblib")  # Use path to your saved pipeline
+        pipeline = load_encrypted_model(
+            "models/heart/heart_encrypted.bin",
+            "heart_key"
+        )  # Use path to your saved pipeline
         with open("models/heart/heart_meta.json", "r") as f:
             meta = json.load(f)
         model = pipeline["model"]

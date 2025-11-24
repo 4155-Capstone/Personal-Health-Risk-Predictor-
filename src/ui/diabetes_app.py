@@ -5,6 +5,7 @@ import pandas as pd
 import os
 import requests
 import joblib
+from load_encrypted_model import load_encrypted_model
 
 def download_model(url, local_path):
 
@@ -20,7 +21,10 @@ def diabetes_ui():
     try:
         #pipeline = joblib.load("models/diabetes/diabetes_rf_pipeline.joblib")
         #with open("models/diabetes/diabetes_meta.json", "r") as f:
-        pipeline = joblib.load("models/diabetes/diabetes_logreg_pipeline.joblib")
+        pipeline = load_encrypted_model(
+            "models/diabetes/diabetes_encrypted.bin",
+            "diabetes_key"
+        )
         with open("models/diabetes/diabetes_meta.json", "r") as f:
             meta = json.load(f)
         model = pipeline["model"]
